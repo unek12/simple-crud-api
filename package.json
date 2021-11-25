@@ -1,0 +1,26 @@
+{
+  "name": "task_3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unek12/simple-crud-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unek12/simple-crud-api/issues"
+  },
+  "homepage": "https://github.com/unek12/simple-crud-api#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.15",
+    "uuid": "^8.3.2",
+    "webpack": "^5.64.2"
+  }
+}
