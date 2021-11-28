@@ -1,10 +1,9 @@
 require('dotenv').config()
 const http = require('http')
 const uuid = require('uuid')
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 8080
 const { inputValidator } = require('./src/inputValidator')
 const db = {}
-
 const server = http.createServer(async (req, res) => {
     const { url, method } = req
     const urlSegments = url.split('/').splice(1)
@@ -22,14 +21,18 @@ const server = http.createServer(async (req, res) => {
         case 'person': {
             if (method === 'GET') {
                 if (urlSegments[1]) {
+                    if (!uuid.validate(urlSegments[1])) {
+                        res.writeHead(400, {'Content-Type': 'text/json'})
+                        return res.end(JSON.stringify({message: `Not valid id`}))
+                    }
                     if (urlSegments[1] in db) {
                         res.writeHead(200, {'Content-Type': 'text/json'})
                         return res.end(JSON.stringify(db[urlSegments[1]]))
                     } else {
                         res.writeHead(404, {'Content-Type': 'text/json'})
                         return res.end(JSON.stringify({message: `Item with id ${urlSegments[1]} not found`}))
+                        }
                     }
-                }
                 res.writeHead(200, {'Content-Type': 'text/json'})
                 return res.end(JSON.stringify(db))
             }
@@ -39,8 +42,11 @@ const server = http.createServer(async (req, res) => {
                         if (inputValidator(JSON.parse(chunk.toString()))) {
                             const key = uuid.v1()
                             db[key] = JSON.parse(chunk.toString())
-                            res.writeHead(200, {'Content-Type': 'text/json'})
+                            res.writeHead(201, {'Content-Type': 'text/json'})
                             return res.end(JSON.stringify(db[key]))
+                        } else {
+                            res.writeHead(400, {'Content-Type': 'text/json'})
+                            return res.end(JSON.stringify({message: `Does not contain all required fields`}))
                         }
                     })
                 } else {
@@ -50,12 +56,19 @@ const server = http.createServer(async (req, res) => {
             }
             if (method === 'PUT') {
                 if (urlSegments[1]) {
+                    if (!uuid.validate(urlSegments[1])) {
+                        res.writeHead(400, {'Content-Type': 'text/json'})
+                        return res.end(JSON.stringify({message: `Not valid id`}))
+                    }
                     if (urlSegments[1] in db) {
                         req.on('data', chunk => {
                             if (inputValidator(JSON.parse(chunk.toString()))) {
                                 db[urlSegments[1]] = JSON.parse(chunk.toString())
                                 res.writeHead(200, {'Content-Type': 'text/json'})
                                 return res.end(JSON.stringify(db[urlSegments[1]]))
+                            } else {
+                                res.writeHead(404, {'Content-Type': 'text/json'})
+                                return res.end(JSON.stringify({message: `Item with id ${urlSegments[1]} not found`}))
                             }
                         })
                     }
@@ -65,12 +78,21 @@ const server = http.createServer(async (req, res) => {
                 }
             }
             if (method === 'DELETE') {
-                if (urlSegments[1] in db) {
-                    delete db[urlSegments[1]]
-                    return res.end(JSON.stringify({status: 202 ,message: `Item with id ${urlSegments[1]}`}))
-                } else {
-                    return res.end(JSON.stringify({status: 404, message: `Item with id ${urlSegments[1]} not found`}))
+                if (urlSegments[1]) {
+                    if (!uuid.validate(urlSegments[1])) {
+                        res.writeHead(400, {'Content-Type': 'text/json'})
+                        return res.end(JSON.stringify({message: `Not valid id`}))
+                    }
+                    if (urlSegments[1] in db) {
+                        delete db[urlSegments[1]]
+                        res.writeHead(204, {'Content-Type': 'text/json'})
+                        return res.end()
+                    } else {
+                        res.writeHead(404, {'Content-Type': 'text/json'})
+                        return res.end(JSON.stringify({message: `Item with id ${urlSegments[1]} not found`}))
+                    }
                 }
+
             }
             break
         }
