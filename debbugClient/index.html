@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        .form {
+            display: block;
+            width: 100%;
+            margin: auto;
+        }
+        
+        .form>* {
+            padding: 5px;
+            margin: 10px;
+        }
+        
+        .field {
+            font-size: 24px;
+        }
+        
+        .field div>div {
+            margin: 10px 5px;
+        }
+        
+        input,
+        select {
+            font-size: 24px;
+        }
+        
+        .output {
+            display: flex;
+            width: 100%;
+            padding: 6px;
+            font-size: 18px;
+            border: 1px solid black;
+        }
+        
+        .btn {
+            padding: 5px;
+            font-size: 18px;
+        }
+        
+        .hide {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        <div class="field">
+            <div>
+                <span>URL</span>
+                <input id="url" type="text" placeholder="url" value="/person">
+            </div>
+            <div class="form-fields hide">
+
+                <div>
+                    <span>Name</span>
+                    <input id="name" type="text" placeholder="name" value="">
+                </div>
+                <div>
+                    <span>Age</span>
+                    <input id="age" type="text" placeholder="age" value="">
+                </div>
+                <div>
+                    <span>Hobbies</span>
+                    <input id="hobbies" type="text" placeholder="hobbies" value="">
+                    <button class="btn btn-hobbies">add</button>
+                </div>
+                <div class="hobbies">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="select">
+            <select name="method" id="GET-METHOD">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+        <button class="btn btn-submit">
+            submit
+        </button>
+    </div>
+    <div class="output-code"></div>
+
+    <pre class="output">
+    </pre>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
